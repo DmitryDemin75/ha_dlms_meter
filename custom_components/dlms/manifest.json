@@ -1,0 +1,38 @@
+{
+    "domain": "dlms",
+    "name": "DLMS",
+    "codeowners": [],
+    "config_flow": true,
+    "dependencies": [],
+    "documentation": "https://github.com/yourusername/ha-dlms",
+    "requirements": ["pyserial"],
+    "version": "0.1.0",
+    "iot_class": "local_polling",
+    "integration_type": "hub",
+    "ssdp": [],
+    "zeroconf": [],
+    "services": [
+        {
+            "name": "read_data",
+            "description": "Read data from DLMS device",
+            "response": {
+                "description": "Data received from the device",
+                "data": {
+                    "data": {
+                        "description": "Raw data from the device",
+                        "type": "string"
+                    }
+                }
+            },
+            "fields": {
+                "entry_id": {
+                    "description": "Entry ID of the DLMS configuration",
+                    "required": true,
+                    "selector": {
+                        "text": {}
+                    }
+                }
+            }
+        }
+    ]
+}

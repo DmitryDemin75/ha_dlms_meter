@@ -1,0 +1,84 @@
+set_log_level:
+  name: Set Log Level
+  description: Set the log level for DLMS integration
+  fields:
+    level:
+      name: Log Level
+      description: The log level to set (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+      selector:
+        select:
+          options:
+            - DEBUG
+            - INFO
+            - WARNING
+            - ERROR
+            - CRITICAL
+          mode: dropdown 
+
+run_test:
+  name: Integration Test
+  description: Run a connection test with the DLMS device with data parsing
+  fields:
+    serial_port:
+      name: Serial Port
+      description: Path to the serial port device
+      required: true
+      example: /dev/ttyUSB0
+      selector:
+        text:
+    device:
+      name: Device
+      description: Device identifier
+      example: 01
+      selector:
+        text:
+    query_code:
+      name: Query Code
+      description: Query code for the meter
+      example: "?"
+      selector:
+        text:
+    baudrate:
+      name: Baudrate
+      description: Port speed in baud
+      example: 300
+      selector:
+        number:
+          min: 300
+          max: 19200
+
+run_raw_test:
+  name: Raw Data Test
+  description: Run a connection test with the DLMS device and get raw data
+  fields:
+    serial_port:
+      name: Serial Port
+      description: Path to the serial port device
+      required: true
+      example: /dev/ttyUSB0
+      selector:
+        text:
+    device:
+      name: Device
+      description: Device identifier
+      example: 01
+      selector:
+        text:
+    query_code:
+      name: Query Code
+      description: Query code for the meter
+      example: "?"
+      selector:
+        text:
+    baudrate:
+      name: Baudrate
+      description: Port speed in baud
+      example: 300
+      selector:
+        number:
+          min: 300
+          max: 19200
+
+force_update:
+  name: Force Update
+  description: Run an unscheduled data update for the existing DLMS integration 
