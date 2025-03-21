@@ -3,5 +3,12 @@
      "content_in_root": false,
      "render_readme": true,
      "domain": "dlms",
-     "homeassistant": "2023.8.0"
+     "homeassistant": "2023.8.0",
+     "zip_release": true,
+     "filename": "dlms.zip",
+     "hacs": "1.6.0",
+     "hide_default_branch": true,
+     "country": ["CY", "EU"],
+     "category": "integration",
+     "persistent_directory": "userfiles"
    }
