@@ -4,6 +4,9 @@ import logging
 from datetime import timedelta
 from typing import Any
 import time
+import os
+import shutil
+from pathlib import Path
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, ServiceCall
@@ -67,7 +70,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the DLMS integration."""
     _LOGGER.info("Setting up DLMS integration")
 
-    # Регистрируем сервис для настройки уровня логирования
+    # Register service for setting log level
     async def set_log_level(call: ServiceCall) -> None:
         """Set the log level for DLMS integration."""
         level = call.data.get("level", "INFO")
@@ -82,14 +85,27 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up DLMS from a config entry."""
     _LOGGER.info("Setting up DLMS integration")
+    
+    # Copy icon to integration directory if it doesn't exist
+    icon_file = Path(__file__).parent / "icon.png"
+    if icon_file.exists():
+        _LOGGER.debug("Icon file exists in integration directory")
+    else:
+        # Check if icon exists in repository root
+        repo_icon = Path(__file__).parent.parent.parent / "icon.png"
+        if repo_icon.exists():
+            _LOGGER.debug(f"Copying icon from {repo_icon} to {icon_file}")
+            shutil.copy(repo_icon, icon_file)
+        else:
+            _LOGGER.debug("Icon file not found in repository")
 
-    # Регистрируем сервис для запуска теста
+    # Register service for running the test
     async def async_run_dlms_test(call: ServiceCall) -> None:
         """Run DLMS test."""
         _LOGGER.info("Running DLMS test")
         port = call.data.get(CONF_SERIAL_PORT, DEFAULT_SERIAL_PORT)
         
-        # Создаем объект DLMSData с настройками из вызова сервиса
+        # Create DLMSData object with settings from service call
         dlms_data = DLMSData(
             serial_port=port,
             device=call.data.get(CONF_DEVICE, DEFAULT_DEVICE),
@@ -105,37 +121,37 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         
         _LOGGER.info("Starting DLMS test with port: %s", port)
         
-        # Запускаем чтение данных
+        # Start reading data
         result = await dlms_data.read_data()
         
-        # Формируем результат в удобном для чтения формате
+        # Format result in a readable format
         if result:
             _LOGGER.info("DLMS test successful! Received data:")
-            message = "DLMS тест выполнен успешно!\nПолученные данные:\n\n"
+            message = "DLMS test successful!\nReceived data:\n\n"
             for obis_code, data in result.items():
                 if isinstance(data, dict):
-                    data_str = f"значение: {data.get('value', 'н/д')}"
+                    data_str = f"value: {data.get('value', 'n/a')}"
                     if 'unit' in data and data['unit']:
-                        data_str += f", единица: {data['unit']}"
+                        data_str += f", unit: {data['unit']}"
                     if 'date' in data and data['date']:
-                        data_str += f", дата: {data['date']}"
+                        data_str += f", date: {data['date']}"
                     if 'time' in data and data['time']:
-                        data_str += f", время: {data['time']}"
+                        data_str += f", time: {data['time']}"
                 else:
                     data_str = str(data)
                 
                 message += f"{obis_code}: {data_str}\n"
                 _LOGGER.info("  %s: %s", obis_code, data)
                 
-            # Создаем уведомление с результатами
+            # Create notification with results
             persistent_notification.async_create(
                 hass,
                 message,
-                title="Результаты DLMS теста",
+                title="DLMS Test Results",
                 notification_id="dlms_test_result"
             )
             
-            # Обновляем датчик с результатами
+            # Update sensor with results
             hass.states.async_set(
                 "sensor.dlms_test_result", 
                 "success", 
@@ -146,17 +162,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             
         else:
             _LOGGER.warning("DLMS test failed! No data received.")
-            message = "DLMS тест не удался! Данные не получены."
+            message = "DLMS test failed! No data received."
             
-            # Создаем уведомление с результатами
+            # Create notification with results
             persistent_notification.async_create(
                 hass,
                 message,
-                title="Результаты DLMS теста",
+                title="DLMS Test Results",
                 notification_id="dlms_test_result"
             )
             
-            # Обновляем датчик с результатами
+            # Update sensor with results
             hass.states.async_set(
                 "sensor.dlms_test_result", 
                 "failed", 
@@ -164,15 +180,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                  "message": message}
             )
         
-        # Закрываем соединение
+        # Close connection
         dlms_data.disconnect()
 
     async def run_raw_test(call: ServiceCall) -> None:
-        """Запуск теста DLMS с возвратом необработанных данных."""
+        """Run DLMS test with raw data return."""
         _LOGGER.info("Running DLMS raw test")
         port = call.data.get(CONF_SERIAL_PORT, DEFAULT_SERIAL_PORT)
         
-        # Создаем объект DLMSData с настройками из вызова сервиса
+        # Create DLMSData object with settings from service call
         dlms_data = DLMSData(
             serial_port=port,
             device=call.data.get(CONF_DEVICE, DEFAULT_DEVICE),
@@ -188,22 +204,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         
         _LOGGER.info("Starting DLMS raw test with port: %s", port)
         
-        # Запускаем тест с получением необработанных данных
+        # Run test to get raw data
         raw_data = await dlms_data.run_test()
         
-        # Отправляем результат как event
+        # Send result as event
         hass.bus.async_fire("dlms_raw_test_result", {"data": raw_data})
         _LOGGER.info("DLMS raw test completed, results sent as event")
         
-        # Создаем уведомление с результатами
+        # Create notification with results
         persistent_notification.async_create(
             hass,
             raw_data,
-            title="Результаты DLMS необработанного теста",
+            title="DLMS Raw Test Results",
             notification_id="dlms_raw_test_result"
         )
         
-        # Обновляем датчик с результатами
+        # Update sensor with results
         hass.states.async_set(
             "sensor.dlms_raw_test_result", 
             "completed", 
@@ -211,19 +227,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
              "last_updated": time.strftime("%Y-%m-%d %H:%M:%S")}
         )
         
-        # Закрываем соединение
+        # Close connection
         dlms_data.disconnect()
         
     async def force_data_update(call: ServiceCall) -> None:
-        """Внеплановое обновление данных для существующей интеграции."""
+        """Force data update for existing integration."""
         _LOGGER.info("Forcing DLMS data update")
         
-        # Проверяем, существует ли координатор
+        # Check if coordinator exists
         if not hass.data.get(DOMAIN):
             _LOGGER.error("DLMS integration not set up")
             return
             
-        # Получаем ID записи - если указан, используем его, иначе берем первый доступный
+        # Get entry ID - if specified, use it, otherwise take the first available
         entry_id = call.data.get("entry_id")
         if entry_id:
             if entry_id not in hass.data[DOMAIN]:
@@ -231,7 +247,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 return
             coordinator = hass.data[DOMAIN][entry_id]
         else:
-            # Берем первую доступную запись
+            # Take the first available entry
             if not hass.data[DOMAIN]:
                 _LOGGER.error("No DLMS integrations found")
                 return
@@ -240,7 +256,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             
         _LOGGER.info("Forcing update for DLMS integration %s", entry_id)
         
-        # Запускаем обновление
+        # Start update
         await coordinator.async_refresh()
         _LOGGER.info("DLMS data update completed")
         
@@ -254,14 +270,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     serial_port = entry.data.get(CONF_SERIAL_PORT, DEFAULT_SERIAL_PORT)
     query_code = entry.data.get(CONF_QUERY_CODE, DEFAULT_QUERY_CODE)
     
-    # Создаем координатор обновления данных
+    # Create data update coordinator
     update_interval = timedelta(seconds=entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_UPDATE_INTERVAL))
     
     dlms_data = DLMSData(
         serial_port=serial_port,
         device=device_name,
         query_code=query_code,
-        baud_rate=entry.data.get(CONF_BAUDRATE, 300), # Используем 300 бод как начальную скорость
+        baud_rate=entry.data.get(CONF_BAUDRATE, 300), # Use 300 baud as initial speed
         bytesize=entry.data.get(CONF_BYTESIZE, DEFAULT_BYTESIZE),
         parity=entry.data.get(CONF_PARITY, DEFAULT_PARITY),
         stopbits=entry.data.get(CONF_STOPBITS, DEFAULT_STOPBITS),
@@ -275,15 +291,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         update_interval,
     )
     
-    # Сохраняем координатор в данных устройства
+    # Save coordinator in device data
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = coordinator
     
-    # Первый запрос данных
+    # First data request
     _LOGGER.info("Setting up DLMS integration")
     await coordinator.async_config_entry_first_refresh()
     
-    # Настройка платформ
+    # Setup platforms
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     
     _LOGGER.info("DLMS integration setup completed")
@@ -293,12 +309,12 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     _LOGGER.info("Unloading DLMS integration")
     
-    # Выгрузка платформ
+    # Unload platforms
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     
-    # Удаление данных
+    # Remove data
     if unload_ok:
-        # Закрываем соединение с устройством
+        # Close connection to device
         coordinator = hass.data[DOMAIN][entry.entry_id]
         coordinator.dlms_data.disconnect()
         hass.data[DOMAIN].pop(entry.entry_id)
