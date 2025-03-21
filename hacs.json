@@ -1,0 +1,7 @@
+   {
+     "name": "DLMS Meter Integration",
+     "content_in_root": false,
+     "render_readme": true,
+     "domain": "dlms",
+     "homeassistant": "2023.8.0"
+   }
