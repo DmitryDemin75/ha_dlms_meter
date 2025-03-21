@@ -13,7 +13,7 @@ and receive electricity consumption data.
 ### HACS Installation
 1. Make sure you have [HACS](https://hacs.xyz/) installed in your Home Assistant instance.
 2. Click on the button below to add this repository to HACS:
-   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=USERNAME&repository=ha_dlms_meter&category=integration)
+   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=DmitryDemin75&repository=ha_dlms_meter&category=integration)
 3. Install the integration from HACS.
 4. Restart Home Assistant.
 5. Add the integration through "Settings" > "Devices & Services" > "Add Integration" > "DLMS".

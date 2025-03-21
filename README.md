@@ -20,7 +20,7 @@ and receive electricity consumption data.
 
 1. Make sure you have [HACS](https://hacs.xyz/) installed in your Home Assistant instance.
 2. Add this repository to your HACS by clicking on the button below:
-   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=USERNAME&repository=ha_dlms_meter&category=integration)
+   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=DmitryDemin75&repository=ha_dlms_meter&category=integration)
 3. Install the integration from HACS.
 4. Restart Home Assistant.
 5. Add the integration through "Settings" > "Devices & Services" > "Add Integration" > "DLMS".
@@ -49,15 +49,15 @@ If you want to contribute to this integration, please read the [Contribution gui
 
 ***
 
-[integration]: https://github.com/USERNAME/ha_dlms_meter
-[exampleimg]: https://raw.githubusercontent.com/USERNAME/ha_dlms_meter/main/example.png
-[commits-shield]: https://img.shields.io/github/commit-activity/y/USERNAME/ha_dlms_meter.svg
-[commits]: https://github.com/USERNAME/ha_dlms_meter/commits/main
+[integration]: https://github.com/DmitryDemin75/ha_dlms_meter
+[exampleimg]: https://raw.githubusercontent.com/DmitryDemin75/ha_dlms_meter/main/example.png
+[commits-shield]: https://img.shields.io/github/commit-activity/y/DmitryDemin75/ha_dlms_meter.svg
+[commits]: https://github.com/DmitryDemin75/ha_dlms_meter/commits/main
 [hacs]: https://github.com/hacs/integration
 [hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg
-[license]: https://github.com/USERNAME/ha_dlms_meter/blob/main/LICENSE
-[license-shield]: https://img.shields.io/github/license/USERNAME/ha_dlms_meter.svg
-[maintenance-shield]: https://img.shields.io/badge/maintainer-YOUR_GITHUB_USERNAME-blue.svg
-[releases-shield]: https://img.shields.io/github/release/USERNAME/ha_dlms_meter.svg
-[releases]: https://github.com/USERNAME/ha_dlms_meter/releases
-[user_profile]: https://github.com/USERNAME 
+[license]: https://github.com/DmitryDemin75/ha_dlms_meter/blob/main/LICENSE
+[license-shield]: https://img.shields.io/github/license/DmitryDemin75/ha_dlms_meter.svg
+[maintenance-shield]: https://img.shields.io/badge/maintainer-DmitryDemin75-blue.svg
+[releases-shield]: https://img.shields.io/github/release/DmitryDemin75/ha_dlms_meter.svg
+[releases]: https://github.com/DmitryDemin75/ha_dlms_meter/releases
+[user_profile]: https://github.com/DmitryDemin75 
