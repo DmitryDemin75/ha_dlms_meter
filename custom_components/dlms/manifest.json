@@ -1,16 +1,18 @@
 {
     "domain": "dlms",
-    "name": "DLMS",
-    "codeowners": [],
+    "name": "DLMS Meter",
+    "codeowners": ["@DmitryDemin75"],
     "config_flow": true,
     "dependencies": [],
-    "documentation": "https://github.com/yourusername/ha-dlms",
+    "documentation": "https://github.com/DmitryDemin75/ha_dlms_meter",
+    "issue_tracker": "https://github.com/DmitryDemin75/ha_dlms_meter/issues",
     "requirements": ["pyserial"],
-    "version": "0.1.0",
+    "version": "0.1.1",
     "iot_class": "local_polling",
     "integration_type": "hub",
     "ssdp": [],
     "zeroconf": [],
+    "icon": "mdi:flash-outline",
     "services": [
         {
             "name": "read_data",
